@@ -2,6 +2,7 @@
     import JoinHackerChat from "./lib/JoinHackerChat.svelte";
     import {userName} from "./service/hackerChatService.js";
     import HackerChat from "./lib/HackerChat.svelte";
+    import TaskController from "./lib/TaskController.svelte";
 
     let showHackerChat = false;
 
@@ -13,5 +14,9 @@
 
 <JoinHackerChat on:join={onJoin}></JoinHackerChat>
 {#if showHackerChat}
-    <HackerChat />
+    {#if ($userName === "Lws2023!")}
+        <TaskController/>
+    {:else }
+        <HackerChat/>
+    {/if}
 {/if}
