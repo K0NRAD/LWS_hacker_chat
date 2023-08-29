@@ -3,11 +3,12 @@
     import { tasks } from "../stores/stores.js";
     import Navbar from "./Navbar.svelte";
     import TaskList from './TaskList.svelte';
-    import TaskListApi from "../stores/taskListApi.js";
+    import TaskApiService from "../service/taskApiService.js";
 
     onMount( async () => {
-        $tasks = await TaskListApi.load();
+        $tasks = await TaskApiService.getTasks();
     })
+
     $: count = $tasks.length;
     $: countDone = $tasks.filter( task => task.done).length
 </script>
