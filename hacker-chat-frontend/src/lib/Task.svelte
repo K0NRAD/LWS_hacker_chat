@@ -6,7 +6,7 @@
     import {onMount} from "svelte";
     import {tasks} from "../stores/stores";
     import TaskApiService from "../service/taskApiService.js";
-    import {customToIso, isoToCustom} from "../service/utilities.js";
+    import {customDateTimeToLocalDateTime, localDateTimeToCustomDateTime} from "../service/utilities.js";
 
     onMount(() => {
         flatpickr("#input-release", {
@@ -25,10 +25,10 @@
         done: false,
     };
 
-    let releaseAt = isoToCustom(task.releaseAt);
+    let releaseAt = localDateTimeToCustomDateTime(task.releaseAt);
 
     $: {
-        task.releaseAt = customToIso(releaseAt);
+        task.releaseAt = customDateTimeToLocalDateTime(releaseAt);
     }
 
     let isShowToast = false;
@@ -69,10 +69,6 @@
         isShowToast = true;
     };
 
-    const setReleaseAt = (releaseAt) => {
-        task.releaseAt = releaseAt;
-    }
-
     const onClickDelete = (id) => {
         TaskApiService.deleteTaskById(id);
         $tasks = $tasks.filter((t) => t.id !== id);
@@ -105,8 +101,7 @@
                                 type="text"
                                 class="form-control"
                                 id="input-answer-{index}"
-                                bind:value={task.answers[index]}
-                        />
+                                bind:value={task.answers[index]}/>
                     </div>
                 </div>
             {/each}

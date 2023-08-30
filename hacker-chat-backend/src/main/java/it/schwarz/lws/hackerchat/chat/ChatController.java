@@ -1,6 +1,10 @@
 package it.schwarz.lws.hackerchat.chat;
 
+import it.schwarz.lws.hackerchat.maintenance.TaskService;
+import it.schwarz.lws.hackerchat.solution.TaskSolution;
+import it.schwarz.lws.hackerchat.solution.TaskSolutionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -8,16 +12,24 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static it.schwarz.lws.hackerchat.chat.ChatService.HACKER;
+
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
     private final SimpMessageSendingOperations messagingTemplate;
+    private final TaskService taskService;
+    private final TaskSolutionService taskSolutionService;
 
-    private final Pattern pattern = Pattern.compile("^@\\S+");
+    private final Pattern pattern = Pattern.compile("@([^>]+)");
 
     @MessageMapping("/chat/messages")
     public void sendMessage(@Payload ChatMessage chatMessage) {
@@ -25,8 +37,29 @@ public class ChatController {
         Matcher matcher = pattern.matcher(content);
 
         if (matcher.find()) {
-            String topic = "/topic/" + matcher.group(0).substring(1);
+            String atUser = matcher.group(1).trim();
+            if (atUser.equals(HACKER)) {
+                List<String> tokens = Arrays.stream(content.split(">"))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .toList();
+                if (tokens.size() >= 3) {
+                    String hacker = tokens.get(0);
+                    Long taskId = Long.valueOf(tokens.get(1));
+                    int answerInx = tokens.get(2).toUpperCase().charAt(0) - 'A';
+                    TaskSolution taskSolution = TaskSolution.builder()
+                            .chatUser(chatMessage.getUserName())
+                            .answerInx(answerInx)
+                            .answerAt(LocalDateTime.now())
+                            .task(taskService.readTasksById(taskId))
+                            .build();
+                    taskSolutionService.create(taskSolution);
+                }
+            }
+
+            String topic = "/topic/" + atUser;
             messagingTemplate.convertAndSend(topic, chatMessage);
+
             topic = "/topic/" + chatMessage.getUserName();
             messagingTemplate.convertAndSend(topic, chatMessage);
         } else {

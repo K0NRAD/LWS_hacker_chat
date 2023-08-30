@@ -1,5 +1,6 @@
 package it.schwarz.lws.hackerchat.maintenance;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,9 @@ public class TaskService {
 
     public void deleteTaskById(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public Task readTasksById(Long taskId) {
+        return taskRepository.findById(taskId).orElseThrow(EntityNotFoundException::new);
     }
 }

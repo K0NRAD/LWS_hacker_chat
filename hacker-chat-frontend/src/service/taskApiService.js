@@ -1,4 +1,3 @@
-// JavaScript-API-Service
 export default class TaskApiService {
     static baseUrl = 'http://localhost:8080/tasks';
 
@@ -7,7 +6,7 @@ export default class TaskApiService {
         if (response.ok) {
             return await response.json();
         } else {
-            throw new Error('Fehler beim Abrufen der Tasks');
+            throw new Error('Error while retrieving the tasks');
         }
     }
 
@@ -22,7 +21,7 @@ export default class TaskApiService {
         if (response.ok) {
             return await response.json();
         } else {
-            throw new Error('Fehler beim Erstellen des Tasks');
+            throw new Error('Error while creating the task');
         }
     }
 
@@ -31,7 +30,7 @@ export default class TaskApiService {
             method: 'DELETE',
         });
         if (!response.ok) {
-            throw new Error('Fehler beim Löschen des Tasks');
+            throw new Error('rror while deleting the task');
         }
     }
 }

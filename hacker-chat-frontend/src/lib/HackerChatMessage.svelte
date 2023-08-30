@@ -61,7 +61,7 @@
         </div>
     </div>
     <img class="chat-img"
-         src={chatMessage.userName !== 'Hacker' ? profilePicUser : profilePicBot} alt="pic"
+         src={chatMessage.userName !== 'Malicious Marvin' ? profilePicUser : profilePicBot} alt="pic"
          on:click={sendTo}/>
     <div class="chat-text">
         {#each chatMessage.content.split("|") as line}

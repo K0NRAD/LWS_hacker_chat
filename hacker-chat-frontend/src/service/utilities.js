@@ -1,22 +1,19 @@
-export const createISOTime = () => {
+export const createLocalDateTime = () => {
     const now = new Date();
-    now.setSeconds(0);
-    now.setMilliseconds(0);
-    return now.toISOString();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = "00";
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
-export const toIsoString = (dateTime) => {
-    const [date, time] = dateTime.split(' ');
-    const [day, month, year] = date.split('.');
-    const [hour, minute] = time.split(':');
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour}:${minute}:00`;
-}
-
-export function isoToCustom(isoString) {
-    if(!isoString) {
+export const localDateTimeToCustomDateTime = (localDateTime) => {
+    if (!localDateTime) {
         return '';
     }
-    const date = new Date(isoString);
+    const date = new Date(localDateTime);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
@@ -25,11 +22,11 @@ export function isoToCustom(isoString) {
     return `${day}.${month}.${year} ${hour}:${minute}`;
 }
 
-export function customToIso(customString) {
-    if(!customString) {
+export const customDateTimeToLocalDateTime = (customDateTime) => {
+    if (!customDateTime) {
         return '';
     }
-    const [date, time] = customString.split(' ');
+    const [date, time] = customDateTime.split(' ');
     const [day, month, year] = date.split('.');
     const [hour, minute] = time.split(':');
 

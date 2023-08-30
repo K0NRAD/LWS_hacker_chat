@@ -1,7 +1,7 @@
 import {get, writable} from "svelte/store";
 import SockJS from "sockjs-client"
 import {Stomp} from "@stomp/stompjs";
-import {createISOTime} from "./utilities.js";
+import {createLocalDateTime} from "./utilities.js";
 
 export const userName = writable("");
 export const chatMessages = writable([]);
@@ -22,8 +22,8 @@ export const sendMessage = (content) => {
             userName: get(userName),
             content: content,
             type: "CHAT",
-            sendAt: createISOTime(),
-            receivedAt: createISOTime()
+            sendAt: createLocalDateTime(),
+            receivedAt: createLocalDateTime()
         };
         stompClient.send("/app/chat/messages", {}, JSON.stringify(chatMessage));
     }
@@ -37,8 +37,8 @@ const onConnected = () => {
             userName: get(userName),
             content: `${get(userName)} joined the chat.`,
             type: 'JOIN',
-            sendAt: createISOTime(),
-            receivedAt: createISOTime()
+            sendAt: createLocalDateTime(),
+            receivedAt: createLocalDateTime()
         }));
 }
 

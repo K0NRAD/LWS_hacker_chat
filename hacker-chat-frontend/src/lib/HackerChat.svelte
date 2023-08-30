@@ -23,13 +23,14 @@
 
     const onClickSend = () => {
         sendMessage(chatMessageContent)
+        chatMessageContent = "";
     }
 
     const onSendTo = (event) => {
-        const {userName, questionId} = event.detail;
-        chatMessageContent = `@${userName}  ${questionId}`;
+        const { userName, questionId } = event.detail;
+        chatMessageContent = `@${userName} ${questionId ? `> ${questionId}` : ''} > `;
         messageInputField.focus();
-    }
+    };
 
 </script>
 
@@ -37,7 +38,7 @@
     <div class="col-8  offset-2">
         <div class="card chat">
             <div class="card-header">
-                <h1 class="text-center">Cyber Security Chat</h1>
+                <h1 class="text-center ls-10">Cyber<span class="text-red">Security</span>Chat</h1>
             </div>
             <div class="card-body">
                 <div class="chat-messages" bind:this={messageContainer}>
@@ -76,5 +77,13 @@
         overflow: auto;
         transform: translate(0, 0);
         transition: transform 0.8s ease-in-out;
+    }
+
+    .ls-10 {
+        letter-spacing: 10px;
+    }
+
+    .text-red {
+        color: red;
     }
 </style>

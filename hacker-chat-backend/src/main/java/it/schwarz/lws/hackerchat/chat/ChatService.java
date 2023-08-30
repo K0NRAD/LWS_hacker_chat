@@ -21,19 +21,21 @@ import java.util.StringJoiner;
 @EnableScheduling
 @RequiredArgsConstructor
 public class ChatService {
+    public static final String HACKER = "Malicious Marvin";
+
     private final SimpMessageSendingOperations messagingTemplate;
     private final TaskService taskService;
     private final TaskScheduler taskScheduler;
 
 
-    private final List<String> currentUsers = new ArrayList<>();
+    private final List<String> currentChatUsers = new ArrayList<>();
 
     public void addUser(String user) {
-        currentUsers.add(user);
+        currentChatUsers.add(user);
     }
 
     public void removeUser(String user) {
-        currentUsers.remove(user);
+        currentChatUsers.remove(user);
     }
 
     private void sendChatQuestion(Task task) {
@@ -49,7 +51,7 @@ public class ChatService {
         ChatMessage chatMessage = ChatMessage.builder()
                 .content(stringJoiner.toString())
                 .type(MessageType.QUESTION)
-                .userName("Malicious Marvin")
+                .userName(HACKER)
                 .sendAt(task.getReleaseAt())
                 .questionId(task.getId())
                 .build();
@@ -57,7 +59,7 @@ public class ChatService {
         messagingTemplate.convertAndSend("/topic/public", chatMessage);
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 20000)
     public void scheduleTasks() {
         Date currentDate = new Date();
 
