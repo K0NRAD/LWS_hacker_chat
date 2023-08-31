@@ -5,15 +5,13 @@
     const toggle = () => (open = !open);
 </script>
 
-<section class="bg-lws text-white text-start py-2">
-    <div class="container">
-        <h1 class="display-6 letter-spacing">Task<span class="text-lws">Dashboard</span></h1>
-        <h2 class="lead fw-light">
-            <slot />
-        </h2>
-        <Button color="info" on:click={toggle}>New Question</Button>
+
+<nav class="navbar bg-white fixed-top">
+    <div class="container bg-lws ">
+        <div class="navbar-brand mb-0 fs-2 letter-spacing text-white">Task<span class="text-lws">Dashboard</span></div>
+        <Button color="info" on:click={toggle}>New Task</Button>
     </div>
-</section>
+</nav>
 
 <div>
     <Modal isOpen={open} {toggle}>
@@ -28,6 +26,7 @@
     .bg-lws {
         background-color: #B645B2;
     }
+
     .text-lws {
         color: #18D8E8;
     }

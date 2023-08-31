@@ -1,12 +1,12 @@
 <script>
     import {Toast} from "sveltestrap";
     import {createEventDispatcher} from "svelte/internal";
-    import flatpickr from "flatpickr";
     import {German} from "flatpickr/dist/l10n/de";
     import {onMount} from "svelte";
     import {tasks} from "../stores/stores";
-    import TaskApiService from "../service/taskApiService.js";
     import {customDateTimeToLocalDateTime, localDateTimeToCustomDateTime} from "../service/utilities.js";
+    import flatpickr from "flatpickr";
+    import TaskApiService from "../service/taskApiService.js";
 
     onMount(() => {
         flatpickr("#input-release", {
@@ -84,7 +84,7 @@
     <form on:submit|preventDefault={onClickSave}>
         <div class="card-header mb-3">
             <div class="d-flex align-items-center justify-content-between">
-                <label for="input-question" class="form-label ms-1 fw-bold">Question</label>
+                <label for="input-question" class="form-label ms-1 fw-bold">Task</label>
                 <input type="checkbox" class="ms-3" id="checkbox-id" bind:checked={task.done}/>
             </div>
             <input type="text" class="form-control" id="input-question" bind:value={task.question}/>

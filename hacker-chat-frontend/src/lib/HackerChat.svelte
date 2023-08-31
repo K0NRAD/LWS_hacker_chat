@@ -1,5 +1,5 @@
 <script>
-    import {onMount} from "svelte";
+    import {onMount, afterUpdate} from "svelte";
     import HackerChatMessage from "./HackerChatMessage.svelte";
     import {chatMessages, connect, sendMessage} from "../service/hackerChatService.js";
 
@@ -13,8 +13,16 @@
 
     onMount(() => {
         connect();
+        scrollToBottom();
     });
 
+    afterUpdate(() => {
+        scrollToBottom();
+    });
+
+    const scrollToBottom = () => {
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
     const onKeyDown = (event) => {
         if (event.key === 'Enter') {
             onClickSend();

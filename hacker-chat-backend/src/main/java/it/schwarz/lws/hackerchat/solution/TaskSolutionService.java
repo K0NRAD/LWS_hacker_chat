@@ -38,6 +38,10 @@ public class TaskSolutionService {
         taskSolutionRepository.save(taskSolution);
     }
 
+    public boolean exist(final TaskSolution taskSolution) {
+        return taskSolutionRepository.existsByChatUserAndTask(taskSolution.getChatUser(), taskSolution.getTask());
+    }
+
     public void delete(final Long id) {
         taskSolutionRepository.deleteById(id);
     }

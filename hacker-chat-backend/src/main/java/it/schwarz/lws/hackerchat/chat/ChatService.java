@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 @Service
 @EnableScheduling
@@ -83,6 +80,22 @@ public class ChatService {
 
     public void executeTask(Task task) {
         sendChatQuestion(task);
+    }
+
+    public String getRandomFakeChatAnswer() {
+        List<String> chatFakeAnswers = Arrays.asList(
+                "Chatten mit Dir sind wie Bugs im Code, nervig und unerwünscht.",
+                "Chats mit Dir, so unerwünscht, wie Viren im System.",
+                "Deine Chats, ähnlich interessant wie eine Endlosschleife.",
+                "Nachrichten von dir sind wie Rauschen im Code-Kosmos. Sie werden ignoriert.",
+                "Bitte schalte auf stumm, dein Chat gehört nicht zum Orchester.",
+                "Du bist ein Syntaxfehler in meinem digitalen Leben.",
+                "Alarm, deine Nachrichten haben Null Nutzen und sind volle Störung.",
+                "Keine Zeit, deine Nachricht ist ein Fehler im Algorithmus meiner Geduld.",
+                "Deine Nachricht ist so willkommen wie ein Systemabsturz.");
+
+        Random random = new Random();
+        return chatFakeAnswers.get(random.nextInt(chatFakeAnswers.size()));
     }
 
     private String localDateTimeToCronExpression(LocalDateTime localDateTime) {

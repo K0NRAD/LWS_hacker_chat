@@ -37,7 +37,7 @@ public class TaskSolution {
     @Column(nullable = false)
     private LocalDateTime answerAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     private Task task;
 }

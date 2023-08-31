@@ -44,24 +44,32 @@ public class ChatController {
                         .filter(s -> !s.isEmpty())
                         .toList();
                 if (tokens.size() >= 3) {
-                    String hacker = tokens.get(0);
-                    Long taskId = Long.valueOf(tokens.get(1));
-                    int answerInx = tokens.get(2).toUpperCase().charAt(0) - 'A';
-                    TaskSolution taskSolution = TaskSolution.builder()
-                            .chatUser(chatMessage.getUserName())
-                            .answerInx(answerInx)
-                            .answerAt(LocalDateTime.now())
-                            .task(taskService.readTasksById(taskId))
+                    saveTaskSolution(chatMessage, tokens);
+                    String topic = "/topic/" + chatMessage.getUserName();
+                    messagingTemplate.convertAndSend(topic, chatMessage);
+                } else {
+                    ChatMessage chatMessageAnswer = ChatMessage.builder()
+                            .content(chatService.getRandomFakeChatAnswer())
+                            .type(MessageType.CHAT)
+                            .userName(HACKER)
+                            .sendAt(LocalDateTime.now())
+                            .questionId(null)
                             .build();
-                    taskSolutionService.create(taskSolution);
+
+                    String topic = "/topic/" + chatMessage.getUserName();
+                    messagingTemplate.convertAndSend(topic, chatMessage);
+
+                    topic = "/topic/" + chatMessage.getUserName();
+                    messagingTemplate.convertAndSend(topic, chatMessageAnswer);
                 }
+            } else {
+                String topic = "/topic/" + atUser;
+                messagingTemplate.convertAndSend(topic, chatMessage);
+
+                topic = "/topic/" + chatMessage.getUserName();
+                messagingTemplate.convertAndSend(topic, chatMessage);
             }
 
-            String topic = "/topic/" + atUser;
-            messagingTemplate.convertAndSend(topic, chatMessage);
-
-            topic = "/topic/" + chatMessage.getUserName();
-            messagingTemplate.convertAndSend(topic, chatMessage);
         } else {
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
@@ -75,5 +83,20 @@ public class ChatController {
         chatService.addUser(userName);
         accessor.getSessionAttributes().put("userName", userName);
         return chatMessage;
+    }
+
+    private void saveTaskSolution(ChatMessage chatMessage, List<String> tokens) {
+        String hacker = tokens.get(0);
+        Long taskId = Long.valueOf(tokens.get(1));
+        int answerInx = tokens.get(2).toUpperCase().charAt(0) - 'A';
+        TaskSolution taskSolution = TaskSolution.builder()
+                .chatUser(chatMessage.getUserName())
+                .answerInx(answerInx)
+                .answerAt(LocalDateTime.now())
+                .task(taskService.readTasksById(taskId))
+                .build();
+        if(!taskSolutionService.exist(taskSolution)) {
+            taskSolutionService.create(taskSolution);
+        }
     }
 }
